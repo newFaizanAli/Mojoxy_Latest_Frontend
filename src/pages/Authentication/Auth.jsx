@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
-import Logo from '../../images/logo/logo.svg';
+import Logo from '../../images/logo/logo_icon.png';
 import FormikError from '../../components/Text/FormikError';
 import { Toaster } from 'react-hot-toast';
 
@@ -14,8 +14,12 @@ const Auth = ({ children }) => {
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="py-17.5 px-26 text-center">
               <Link className="mb-5.5 inline-block" to="/">
-                <img className="hidden dark:block" src={Logo} alt="Logo" />
-                <img className="dark:hidden" src={LogoDark} alt="Logo" />
+             <div className='w-100'>
+             <img className="block " src={Logo} alt="Logo" />
+             </div>
+
+                {/* <image className="block" src={Logo} alt="Logo" width={19} height={21} /> */}
+                {/* <img className="dark:hidden" src={LogoDark} alt="Logo" /> */}
               </Link>
 
               <p className="2xl:px-20">

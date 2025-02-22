@@ -3,7 +3,7 @@ import { addUser } from '../../validation/schemas';
 import { useFormik } from 'formik';
 import { useFetch } from '../../hooks/useFetch';
 import fireToast from '../../hooks/fireToast';
-import Form from './form'
+import Form from './Form'
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const UpdateUser = () => {
