@@ -2,8 +2,10 @@ import fireToast from '../hooks/fireToast';
 import { MINPASSLENGTH, MAXPASSLENGTH, DATAPERPAGE } from './constants';
 
 export const fetchData = async (method, url, body, form) => {
-  const fullUrl = `http://localhost:8000${url}`;
-  // const vercelUrl = `https://mojoxy-backend.vercel.app${url}`;
+
+  //  const fullUrl = `http://localhost:8000${url}`;
+  const vercelUrl = `https://mojoxy-backend.vercel.app${url}`;
+
   const options = {
     method: method,
     body: form ? body : JSON.stringify(body),
