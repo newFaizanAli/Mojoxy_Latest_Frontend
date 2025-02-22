@@ -20,7 +20,7 @@ export const fetchData = async (method, url, body, form) => {
 
   try {
     // vercel url
-    const response = await fetch(fullUrl, options);
+    const response = await fetch(vercelUrl, options);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
