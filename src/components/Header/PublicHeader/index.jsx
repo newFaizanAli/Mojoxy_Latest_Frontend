@@ -7,12 +7,20 @@ import DarkModeSwitcher from '../DarkModeSwitcher';
 const Header = () => {
   return (
     <div className="fixed top-5 left-0 right-0 mx-auto z-999 flex w-[90%] max-w-screen-2xl bg-transparent backdrop-blur-md dark:bg-boxdark/30 rounded-full flex-grow items-center justify-center px-4 py-4 shadow-md md:px-6 2xl:px-11 ">
-      <div className="flex items-center gap-2 sm:gap-4">
-        {/* Main link */}
-        <Link className="block flex-shrink-0" to="/">
-          <img src={Logo} height={50} width={50} alt="Logo-icon" />
+      <div className="flex items-center gap-2 sm:gap-4 text-white">
+        <Link to={'/'} className="flex items-center space-x-2">
+          {/* Logo Icon */}
+          <img src={Logo} alt="Logo-icon" className="h-16 w-16" />
+
+          {/* Logo Text */}
+          <div className="flex flex-col items-center text-gray-300 pt-3">
+            <h2 className="icon-text text-4xl font-bold">MOJOXY</h2>
+            <hr className="w-36 border-t-1 border-gray-400 my-3" />
+            <h3 className="icon-text text-xs tracking-wide">
+              Entertainment Unleashed
+            </h3>
+          </div>
         </Link>
-        {/* Mojoxy */}
       </div>
 
       <div className="hidden sm:block mx-auto">
@@ -50,11 +58,6 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-3 2xsm:gap-7">
-        {/* <ul className="flex items-center gap-2 2xsm:gap-4">
-         
-          <DarkModeSwitcher />
-        </ul> */}
-
         {/* Auth Area */}
         <div>
           <Link

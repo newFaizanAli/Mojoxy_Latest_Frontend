@@ -13,13 +13,13 @@ export const fetchData = async (method, url, body, form) => {
   };
 
   if (!form) {
-    options.headers = {
+    options.headers = { 
       'Content-Type': 'application/json',
     };
   }
 
   try {
-    // vercel url
+    // vercel url 
     const response = await fetch(vercelUrl, options);
 
     if (!response.ok) {

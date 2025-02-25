@@ -5,7 +5,8 @@ import { useLocation } from 'react-router-dom';
 
 const PublicLayout = ({ children }) => {
   const location = useLocation();
-  const isAuthPage = location.pathname.startsWith('/auth');
+  const pages = ['/auth', '/artist/register']
+  const isDisplay = pages.some(path => location.pathname.startsWith(path));
 
   return (
     // from-indigo-500 via-purple-500 to-indigo-600
@@ -18,14 +19,14 @@ const PublicLayout = ({ children }) => {
 
         {/* <!-- ===== Main Content Start ===== --> */}
         <main>
-        {!isAuthPage && <Header  />}
+        {!isDisplay && <Header  />}
           <div className="mx-auto">
             {children}
           </div>
         </main>
         {/* <!-- ===== Main Content End ===== --> */}
        
-          <PublicFooter />
+        {!isDisplay &&  <PublicFooter />}
      
       </div>
     </div>

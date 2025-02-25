@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import Logo from '../../images/logo/logo_icon.png';
+import Logo from '../../images/logo/logo.png';
 import { UserRoleContext } from '../../context';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import {
-  MdKeyboardDoubleArrowLeft, 
+  MdKeyboardDoubleArrowLeft,
   MdOutlineKeyboardArrowDown,
 } from 'react-icons/md';
 import { RiAppsFill, RiFolderLockLine, RiCalendar2Line } from 'react-icons/ri';
@@ -13,7 +13,7 @@ import { menuItems } from './menus';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { loginUser } = useContext(UserRoleContext);
-  const location = useLocation(); 
+  const location = useLocation();
   const { pathname } = location;
 
   const trigger = useRef(null);
@@ -60,12 +60,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   }, [sidebarExpanded]);
 
   // const filteredMenuItems = menuItems.filter((item) =>
-    
+
   //   item.roles.includes(loginUser.type),
   // );
 
-  const filteredMenuItems = menuItems.filter((item) =>
-    Array.isArray(item.roles) && item.roles.includes(loginUser.type)
+  const filteredMenuItems = menuItems.filter(
+    (item) => Array.isArray(item.roles) && item.roles.includes(loginUser.type),
   );
 
   return (
@@ -77,8 +77,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <NavLink to="/dashboard">
+        {/* <NavLink to="/dashboard">
           <img src={Logo} alt="Logo" />
+        </NavLink> */}
+        <NavLink to={'/dashboard'} className="flex items-center space-x-2">
+          {/* Logo Icon */}
+          <img src={Logo} alt="Logo-icon" className="h-14 w-14" />
+
+          {/* Logo Text */}
+          <div className="flex flex-col items-center text-gray-200 pt-3">
+            <h2 className="icon-text text-4xl font-bold">MOJOXY</h2>
+            <hr className="w-32 border-t-1 border-gray-400 my-3" />
+            <h3 className="icon-text text-xs tracking-wide">
+              Entertainment Unleashed
+            </h3>
+          </div>
         </NavLink>
 
         <button
@@ -194,8 +207,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           <div>
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Chart --> */}
-
-            
             </ul>
           </div>
         </nav>
