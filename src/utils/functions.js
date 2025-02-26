@@ -2,6 +2,7 @@ import fireToast from '../hooks/fireToast';
 import { MINPASSLENGTH, MAXPASSLENGTH, DATAPERPAGE } from './constants';
 
 export const fetchData = async (method, url, body, form) => {
+
   // const fullUrl = `http://localhost:8000${url}`;
   const vercelUrl = `https://mojoxy-backend.vercel.app${url}`;
 
@@ -16,7 +17,7 @@ export const fetchData = async (method, url, body, form) => {
       'Content-Type': 'application/json',
     };
   }
-
+ 
   try {
     // vercel url 
     const response = await fetch(vercelUrl, options);
