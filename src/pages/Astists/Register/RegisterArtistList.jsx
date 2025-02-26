@@ -50,7 +50,7 @@ const RegisterArtistList = () => {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("bio", values.bio);
-      formData.append("imageFile", values.imageFile);
+      formData.append("imageFile", values?.imageFile);
       formData.append("head", values.head._id);
       formData.append("subhead", values.subhead._id);
       formData.append("subtype", values.subtype._id);
@@ -114,9 +114,9 @@ const RegisterArtistList = () => {
               <div className="flex p-2 gap-2 flex-wrap">
                 <div className="img">
                   <img
-                    src={`data:${artist.image.contentType};base64,${btoa(
+                    src={`data:${artist?.image?.contentType};base64,${btoa(
                       String.fromCharCode(
-                        ...new Uint8Array(artist.image.data.data),
+                        ...new Uint8Array(artist?.image?.data.data),
                       ),
                     )}`}
                     alt={artist?.name || 'Placeholder'}

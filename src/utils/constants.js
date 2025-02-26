@@ -3,7 +3,7 @@ export const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG
 
 export const MINPASSLENGTH = 5;
 export const MAXPASSLENGTH = 12;
-
+export const OTPEXPIRETIME= 300;
 export const DATAPERPAGE = 8;
 
 

@@ -2,8 +2,7 @@ import fireToast from '../hooks/fireToast';
 import { MINPASSLENGTH, MAXPASSLENGTH, DATAPERPAGE } from './constants';
 
 export const fetchData = async (method, url, body, form) => {
-
-  //  const fullUrl = `http://localhost:8000${url}`;
+  // const fullUrl = `http://localhost:8000${url}`;
   const vercelUrl = `https://mojoxy-backend.vercel.app${url}`;
 
   const options = {
@@ -13,7 +12,7 @@ export const fetchData = async (method, url, body, form) => {
   };
 
   if (!form) {
-    options.headers = { 
+    options.headers = {
       'Content-Type': 'application/json',
     };
   }
@@ -117,10 +116,15 @@ export const pageData = (currentPage, filterdData) => {
 
 // hanlde Delete
 
-export const handleDelete = async (confirmMessage, method, url, handleFetch, body, reFetch) => {
-  const confirmDelete = window.confirm(
-    confirmMessage
-  );
+export const handleDelete = async (
+  confirmMessage,
+  method,
+  url,
+  handleFetch,
+  body,
+  reFetch,
+) => {
+  const confirmDelete = window.confirm(confirmMessage);
   if (!confirmDelete) return;
 
   try {
@@ -128,6 +132,7 @@ export const handleDelete = async (confirmMessage, method, url, handleFetch, bod
 
     await reFetch();
   } catch (error) {
-   console.error(error.message)
+    console.error(error.message);
   }
 };
+

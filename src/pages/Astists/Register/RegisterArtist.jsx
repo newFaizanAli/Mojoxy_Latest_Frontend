@@ -6,6 +6,8 @@ import { CiMail, CiUser, CiPhone } from 'react-icons/ci';
 import { MdOutlineEditNote } from 'react-icons/md';
 import { useFetch } from '../../../hooks/useFetch';
 import PictureCard from '../Card/PictureCard';
+import { OTPEXPIRETIME } from '../../../utils/constants';
+import fireToast from '../../../hooks/fireToast';
 
 const RegisterArtist = () => {
   const { handleFetch } = useFetch();
@@ -15,6 +17,12 @@ const RegisterArtist = () => {
   const [subTypes, setSubTypes] = useState([]);
   const [subheadList, setSubheadList] = useState([]);
   const [subtypeList, setSubtypeList] = useState([]);
+
+  const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [otpTime, setOtpTime] = useState(null);
+  const [otp, setOtp] = useState('');
+  const [countdown, setCountdown] = useState(OTPEXPIRETIME);
+  const [isOtpExpired, setIsOtpExpired] = useState(false);
 
   const fetchHeads = useCallback(async () => {
     const response = await handleFetch('GET', '/addartist');
@@ -69,33 +77,164 @@ const RegisterArtist = () => {
     [],
   );
 
+  const verifyEmail = async (email) => {
+    const response = await handleFetch('POST', '/verify-email', { email });
+    if (response.success) {
+      handleGenerateOTP(email);
+    }
+  };
+
+  const handleGenerateOTP = async (email) => {
+    const response = await handleFetch('POST', '/generate-otp', { email });
+    if (response.success) {
+      setGeneratedOtp(response.otp);
+      setOtpTime(Date.now());
+      setCountdown(OTPEXPIRETIME);
+
+      setIsOtpExpired(false);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    const response = await handleFetch('POST', '/verify-otp', {
+      email: formik.values.email,
+      otp,
+    });
+
+    if (response.success) {
+      const fomrikValue = formik.values;
+
+      const formData = new FormData();
+      formData.append('name', fomrikValue.name);
+      formData.append('bio', fomrikValue.bio);
+      formData.append('imageFile', fomrikValue.imageFile);
+      formData.append('head', fomrikValue.head);
+      formData.append('subhead', fomrikValue.subhead);
+      formData.append('subtype', fomrikValue.subtype);
+      formData.append('base_city', fomrikValue.base_city);
+      formData.append('gender', fomrikValue.gender);
+      formData.append('email', fomrikValue.email);
+      formData.append('phno', fomrikValue.phno);
+
+      await handleFetch('POST', '/registerartist', formData, true);
+      formik.resetForm();
+      setGeneratedOtp(null);
+    }else{
+      setGeneratedOtp(null);
+    }
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema: RegisterArtistSchema,
     onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('bio', values.bio);
-      formData.append('imageFile', values.imageFile);
-      formData.append('head', values.head);
-      formData.append('subhead', values.subhead);
-      formData.append('subtype', values.subtype);
-      formData.append('base_city', values.base_city);
-      formData.append('gender', values.gender);
-      formData.append('email', values.email);
-      formData.append('phno', values.phno);
-      try {
-        await handleFetch('POST', '/registerartist', formData, true);
-        formik.resetForm();
-      } catch (error) {
-        console.error('Error submitting form:', error);
-      }
+      verifyEmail(values.email);
+
+      // const formData = new FormData();
+      // formData.append('name', values.name);
+      // formData.append('bio', values.bio);
+      // formData.append('imageFile', values.imageFile);
+      // formData.append('head', values.head);
+      // formData.append('subhead', values.subhead);
+      // formData.append('subtype', values.subtype);
+      // formData.append('base_city', values.base_city);
+      // formData.append('gender', values.gender);
+      // formData.append('email', values.email);
+      // formData.append('phno', values.phno);
+      // try {
+      //   await handleFetch('POST', '/registerartist', formData, true);
+      //   formik.resetForm();
+      // } catch (error) {
+      //   console.error('Error submitting form:', error);
+      // }
     },
   });
 
+  useEffect(() => {
+    if (otpTime) {
+      const interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - otpTime) / 1000); // Elapsed seconds
+        const remaining = Math.max(OTPEXPIRETIME - elapsed, 0); // Ensure it doesn't go below 0
+        setCountdown(remaining);
+
+        if (remaining === 0) {
+          clearInterval(interval);
+          // setGeneratedOtp(null);
+
+          setIsOtpExpired(true);
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [otpTime]);
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  if (generatedOtp) {
+    return (
+      <>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
+          <div className="w-full max-w-md bg-gray-800/40 backdrop-blur-md p-6 rounded-lg shadow-lg border border-gray-700">
+            <h2 className="text-3xl font-bold text-white text-center mb-6">
+              Register as Artist
+            </h2>
+
+            <div className="mb-5">
+              <label className="block text-lg font-medium text-gray-300 mb-2">
+                Enter OTP
+              </label>
+              <div className="relative">
+                <input
+                  id="otp"
+                  name="otp"
+                  type="text"
+                  placeholder="Enter the OTP"
+                  className="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 pl-5 pr-10 text-white outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-400/50 transition"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+              </div>
+              
+
+              {!isOtpExpired ? (
+                  <p className="text-md text-gray-500">
+                    OTP expires in:{" "}
+                    <span className="text-red-500">{formatTime(countdown)}</span>
+                  </p>
+                ) : (
+                  <p className="text-md text-gray-400 mt-2">
+                    OTP expired.{" "}
+                    <button
+                      onClick={() => handleGenerateOTP(formik.values.email)}
+                      className="text-indigo-500 hover:underline"
+                    >
+                      Resend OTP
+                    </button>
+                  </p>
+                )}
+            </div>
+
+            <button
+                type="button"
+                className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                onClick={handleVerifyOTP}
+              >
+                Verify OTP
+              </button>
+
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="pt-16 sm:pt-20 md:pt-24 min-h-screen w-full h-full bg-gray-900">
-     
       <div className="grid grid-cols-5 gap-8 bg-gray-800/30 px-3 py-5">
         <div className="col-span-5 xl:col-span-3">
           <div className="rounded-sm px-3">
@@ -231,9 +370,9 @@ const RegisterArtist = () => {
                         value={formik.values.subhead}
                         // onChange={formik.handleChange}
                         onChange={(e) => {
-                    formik.handleChange(e);
-                    handleSubtype(e.target.value);
-                  }}
+                          formik.handleChange(e);
+                          handleSubtype(e.target.value);
+                        }}
                         className="w-full rounded border py-3 pl-11.5 pr-4.5  focus-visible:outline-none border-strokedark bg-gray-800 text-white focus:border-primary"
                       >
                         <option value="" className="dark:bg-boxdark">

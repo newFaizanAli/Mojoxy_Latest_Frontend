@@ -7,12 +7,14 @@ import { useFormik } from 'formik';
 import { forgotPasswordSchema } from '../../validation/schemas';
 import Auth from './Auth';
 import FormikError from '../../components/Text/FormikError';
-import { CiLock, CiMail } from 'react-icons/ci';
+import { CiMail } from 'react-icons/ci';
+import { RiEyeCloseLine, RiEyeLine } from 'react-icons/ri';
 
 const ForgotPassword = () => {
   const [emailValidated, setEmailValidated] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const navigate = useNavigate();
+  const [displayPass, setDisplayPass] = useState(false);
 
   const { handleFetch } = useFetch();
 
@@ -38,7 +40,7 @@ const ForgotPassword = () => {
             email: values.email,
             password: values.password,
           });
-          
+
           if (resp.success) {
             navigate('/');
           }
@@ -110,17 +112,26 @@ const ForgotPassword = () => {
                     <input
                       id="password"
                       name="password"
-                      type="password"
+                      type={displayPass ? 'text' : 'password'}
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       value={formik.values.password}
                       onChange={formik.handleChange}
                       autoComplete="new-password"
                     />
+
                     <FormikError formik={formik} fieldName="password" />
-                    <span className="absolute right-4 top-4">
-                      <CiLock size={25} />
-                    </span>
+                    <button
+                      className="absolute right-4 top-4"
+                      type="button"
+                      onClick={() => setDisplayPass(!displayPass)}
+                    >
+                      {displayPass ? (
+                        <RiEyeLine size={25} />
+                      ) : (
+                        <RiEyeCloseLine size={25} />
+                      )}
+                    </button>
                   </div>
                 </div>
               )}

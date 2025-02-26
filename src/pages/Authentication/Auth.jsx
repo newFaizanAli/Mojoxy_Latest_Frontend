@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.png';
 import { Toaster } from 'react-hot-toast';
 
 const Auth = ({ children }) => {
+  const [displayPass, setDisplayPass] = useState(false);
+
   return (
     <>
       <Toaster />
